@@ -95,11 +95,17 @@
       const qr = el("div", { className: "qr", hidden: true });
       const urlLine = el("div", { className: "link-url", textContent: link.url });
 
-      const copyBtn = el("button", { type: "button", className: "btn", textContent: "Kopyala" });
+      const copyBtn = iconButton("copy", "Kopyala");
       copyBtn.onclick = () => copy(location.origin + "/" + link.code, copyBtn);
 
-      const qrBtn = el("button", { type: "button", className: "btn", textContent: "QR" });
-      qrBtn.onclick = () => { if (qr.hidden) renderQr(qr, link.code); qr.hidden = !qr.hidden; };
+      const qrBtn = iconButton("qr", "QR kod");
+      qrBtn.setAttribute("aria-expanded", "false");
+      qrBtn.onclick = () => {
+        const open = qr.hidden;
+        if (open) renderQr(qr, link.code);
+        qr.hidden = !open;
+        qrBtn.setAttribute("aria-expanded", open);
+      };
 
       const editBtn = el("button", { type: "button", className: "btn", textContent: "Düzenle" });
       editBtn.onclick = () => {
@@ -133,11 +139,15 @@
 
       list.append(el("li", {},
         el("div", { className: "link-top" },
-          el("a", { className: "link-code", href: "/" + link.code, target: "_blank", rel: "noopener", textContent: location.host + "/" + link.code }),
+          el("div", { className: "link-head" },
+            el("a", { className: "link-code", href: "/" + link.code, target: "_blank", rel: "noopener", textContent: location.host + "/" + link.code }),
+            copyBtn,
+            qrBtn,
+          ),
           el("span", { className: "link-meta", textContent: link.clicks + " tık · " + date }),
         ),
         urlLine,
-        el("div", { className: "actions" }, copyBtn, qrBtn, editBtn, delBtn),
+        el("div", { className: "actions" }, editBtn, delBtn),
         qr,
       ));
     }

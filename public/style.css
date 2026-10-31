@@ -138,8 +138,10 @@ button:disabled { opacity: 0.5; cursor: default; }
 }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } }
 
+.result-head { display: flex; align-items: center; gap: 2px; }
 .result-link {
-  display: block;
+  min-width: 0;
+  margin-right: 8px;
   font-size: 24px;
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -147,7 +149,14 @@ button:disabled { opacity: 0.5; cursor: default; }
   text-decoration: none;
   word-break: break-all;
 }
-.result-target { margin: 4px 0 16px; font-size: 13px; color: var(--muted); word-break: break-all; }
+.result-target { margin: 4px 0 0; font-size: 13px; color: var(--muted); word-break: break-all; }
+
+.icon-btn.sm { width: 36px; height: 36px; }
+.icon-btn .i-check { display: none; }
+.icon-btn.done { color: var(--text); }
+.icon-btn.done .i-copy { display: none; }
+.icon-btn.done .i-check { display: block; animation: pop 0.25s ease; }
+@keyframes pop { from { transform: scale(0.6); opacity: 0; } }
 
 .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 
@@ -192,8 +201,19 @@ button:disabled { opacity: 0.5; cursor: default; }
 .links { list-style: none; margin: 8px 0 0; padding: 0; }
 .links li { padding: 16px 0; border-top: 1px solid var(--line); }
 .links li:first-child { border-top: 0; }
-.link-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.link-code { font-weight: 600; color: var(--text); text-decoration: none; }
+/* The meta (clicks · date) wraps below the link on narrow screens instead of splitting it. */
+.link-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; column-gap: 12px; }
+.link-head { display: flex; align-items: center; gap: 2px; min-width: 0; max-width: 100%; }
+.link-code {
+  min-width: 0;
+  margin-right: 6px;
+  overflow: hidden;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .link-meta { font-size: 12px; color: var(--muted); white-space: nowrap; }
 .link-url { margin: 2px 0 10px; font-size: 13px; color: var(--muted); word-break: break-all; }
 .edit-row { display: flex; gap: 8px; margin: 6px 0 10px; }
