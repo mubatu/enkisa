@@ -247,7 +247,7 @@ function json(data, status = 200) {
 }
 
 function notFound() {
-  const html = `<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  const html = `<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark">
 <title>Bulunamadı · enkısa</title><link rel="icon" type="image/png" sizes="64x64" href="/favicon.png"><link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cascadia+Code:wght@400;600&display=swap">
 <link rel="stylesheet" href="/style.css"></head>

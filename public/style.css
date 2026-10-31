@@ -5,9 +5,25 @@
   --line: #e5e5e5;
   --soft: #f5f5f5;
   --danger: #c62828;
+  --ring: rgba(10, 10, 10, 0.07);
+  --placeholder: #b5b5b5;
   --radius: 14px;
   --font: "Cascadia Code", ui-monospace, SFMono-Regular, Menlo, monospace;
-  color-scheme: light;
+  color-scheme: light dark;
+}
+
+/* Follows the device setting; there is no manual toggle. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0a0a0a;
+    --text: #f5f5f5;
+    --muted: #a3a3a3;
+    --line: #262626;
+    --soft: #1c1c1c;
+    --danger: #ef5350;
+    --ring: rgba(245, 245, 245, 0.1);
+    --placeholder: #5c5c5c;
+  }
 }
 
 * { box-sizing: border-box; }
@@ -57,7 +73,7 @@ button:disabled { opacity: 0.5; cursor: default; }
   background: var(--bg);
   transition: box-shadow 0.2s;
 }
-.field:focus-within { box-shadow: 0 0 0 4px rgba(10, 10, 10, 0.07); }
+.field:focus-within { box-shadow: 0 0 0 4px var(--ring); }
 .field-box { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; }
 .field input {
   flex: 1;
@@ -123,7 +139,7 @@ button:disabled { opacity: 0.5; cursor: default; }
 .alias:focus-within { border-color: var(--text); }
 .alias span { color: var(--muted); white-space: nowrap; }
 .alias input { flex: 1; min-width: 0; padding: 12px 0; border: 0; outline: 0; background: transparent; }
-.alias input::placeholder { color: #b5b5b5; }
+.alias input::placeholder { color: var(--placeholder); }
 
 .msg { min-height: 22px; margin: 12px 4px 0; font-size: 14px; color: var(--danger); }
 
@@ -174,7 +190,8 @@ button:disabled { opacity: 0.5; cursor: default; }
 .btn.danger:hover { border-color: var(--danger); }
 
 .qr { margin-top: 16px; text-align: center; }
-.qr img { display: block; width: 200px; height: 200px; margin: 0 auto; }
+/* The QR SVG keeps its white background in dark mode so it stays scannable. */
+.qr img { display: block; width: 200px; height: 200px; margin: 0 auto; border-radius: 10px; }
 
 /* ---------- Admin ---------- */
 
@@ -194,6 +211,7 @@ button:disabled { opacity: 0.5; cursor: default; }
   border: 1.5px solid var(--line);
   border-radius: var(--radius);
   outline: 0;
+  background: var(--bg);
   transition: border-color 0.2s;
 }
 .search:focus { border-color: var(--text); }
@@ -217,7 +235,7 @@ button:disabled { opacity: 0.5; cursor: default; }
 .link-meta { font-size: 12px; color: var(--muted); white-space: nowrap; }
 .link-url { margin: 2px 0 10px; font-size: 13px; color: var(--muted); word-break: break-all; }
 .edit-row { display: flex; gap: 8px; margin: 6px 0 10px; }
-.edit-row input { flex: 1; min-width: 0; padding: 8px 12px; border: 1.5px solid var(--text); border-radius: 10px; outline: 0; }
+.edit-row input { flex: 1; min-width: 0; padding: 8px 12px; border: 1.5px solid var(--text); border-radius: 10px; outline: 0; background: var(--bg); }
 .empty { padding: 32px 0; text-align: center; color: var(--muted); }
 
 /* ---------- 404 ---------- */
@@ -239,7 +257,7 @@ button:disabled { opacity: 0.5; cursor: default; }
     border-radius: var(--radius);
     transition: box-shadow 0.2s;
   }
-  .shorten .field-box:focus-within { box-shadow: 0 0 0 4px rgba(10, 10, 10, 0.07); }
+  .shorten .field-box:focus-within { box-shadow: 0 0 0 4px var(--ring); }
   .shorten .primary { height: 48px; border-radius: var(--radius); }
   .field input { padding: 10px 8px; }
   .icon-btn { width: 38px; height: 38px; }
