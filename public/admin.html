@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Yönetim · enkısa</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cascadia+Code:wght@400;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main class="admin">
+  <header>
+    <a class="brand small" href="/">
+      <img src="/logo.png" alt="">
+      <span>enkısa</span>
+    </a>
+    <button id="logout" type="button" class="btn" hidden>Çıkış</button>
+  </header>
+
+  <form id="login" class="login">
+    <h1>Yönetim</h1>
+    <div class="field">
+      <input id="password" type="password" placeholder="Şifre" aria-label="Şifre" autocomplete="current-password" required autofocus>
+      <button class="primary" type="submit">Giriş</button>
+    </div>
+    <p id="login-msg" class="msg" role="alert"></p>
+  </form>
+
+  <section id="panel" hidden>
+    <div class="admin-head">
+      <h1>Linkler <span id="count" class="count"></span></h1>
+    </div>
+    <input id="filter" class="search" type="search" placeholder="Ara" aria-label="Linklerde ara">
+    <ul id="links" class="links"></ul>
+  </section>
+</main>
+
+<script src="/common.js"></script>
+<script>
+  let links = [];
+
+  $("login").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    store.set("pw", $("password").value);
+    $("password").value = "";
+    await loadLinks();
+  });
+
+  $("logout").onclick = () => {
+    store.del("pw");
+    links = [];
+    showPanel(false);
+  };
+
+  $("filter").addEventListener("input", renderLinks);
+
+  function showPanel(on) {
+    $("panel").hidden = !on;
+    $("logout").hidden = !on;
+    $("login").hidden = on;
+    if (!on) $("password").focus();
+  }
+
+  async function loadLinks() {
+    try {
+      links = (await api("GET", "/api/links", null, store.get("pw"))).links;
+      $("login-msg").textContent = "";
+      showPanel(true);
+      renderLinks();
+    } catch (err) {
+      if (err.status === 401 || err.status === 403) store.del("pw");
+      showPanel(false);
+      $("login-msg").textContent = err.message;
+    }
+  }
+
+  function renderLinks() {
+    const q = $("filter").value.trim().toLowerCase();
+    const shown = q ? links.filter((l) => l.code.includes(q) || l.url.toLowerCase().includes(q)) : links;
+    $("count").textContent = "(" + links.length + ")";
+
+    const list = $("links");
+    list.replaceChildren();
+    if (!shown.length) {
+      list.append(el("li", { className: "empty", textContent: q ? "Sonuç yok." : "Henüz link yok." }));
+      return;
+    }
+
+    for (const link of shown) {
+      const date = new Date(link.created_at).toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" });
+      const qr = el("div", { className: "qr", hidden: true });
+      const urlLine = el("div", { className: "link-url", textContent: link.url });
+
+      const copyBtn = el("button", { type: "button", className: "btn", textContent: "Kopyala" });
+      copyBtn.onclick = () => copy(location.origin + "/" + link.code, copyBtn);
+
+      const qrBtn = el("button", { type: "button", className: "btn", textContent: "QR" });
+      qrBtn.onclick = () => { if (qr.hidden) renderQr(qr, link.code); qr.hidden = !qr.hidden; };
+
+      const editBtn = el("button", { type: "button", className: "btn", textContent: "Düzenle" });
+      editBtn.onclick = () => {
+        const input = el("input", { type: "text", value: link.url, "aria-label": "Yeni hedef" });
+        const save = el("button", { type: "submit", className: "btn dark", textContent: "Kaydet" });
+        const cancel = el("button", { type: "button", className: "btn", textContent: "Vazgeç" });
+        const form = el("form", { className: "edit-row" }, input, save, cancel);
+        cancel.onclick = () => form.replaceWith(urlLine);
+        form.onsubmit = async (e) => {
+          e.preventDefault();
+          try {
+            const updated = await api("PATCH", "/api/links/" + link.code, { url: input.value }, store.get("pw"));
+            link.url = updated.url;
+            urlLine.textContent = updated.url;
+            form.replaceWith(urlLine);
+          } catch (err) { alert(err.message); }
+        };
+        urlLine.replaceWith(form);
+        input.select();
+      };
+
+      const delBtn = el("button", { type: "button", className: "btn danger", textContent: "Sil" });
+      delBtn.onclick = async () => {
+        if (!confirm(location.host + "/" + link.code + " silinsin mi? Bu kod bir daha kullanılmaz.")) return;
+        try {
+          await api("DELETE", "/api/links/" + link.code, null, store.get("pw"));
+          links = links.filter((l) => l !== link);
+          renderLinks();
+        } catch (err) { alert(err.message); }
+      };
+
+      list.append(el("li", {},
+        el("div", { className: "link-top" },
+          el("a", { className: "link-code", href: "/" + link.code, target: "_blank", rel: "noopener", textContent: location.host + "/" + link.code }),
+          el("span", { className: "link-meta", textContent: link.clicks + " tık · " + date }),
+        ),
+        urlLine,
+        el("div", { className: "actions" }, copyBtn, qrBtn, editBtn, delBtn),
+        qr,
+      ));
+    }
+  }
+
+  if (store.get("pw")) loadLinks();
+</script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+# Yerel geliştirme için: bu dosyayı .dev.vars olarak kopyala
+ADMIN_PASSWORD=buraya-bir-sifre

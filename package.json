@@ -1,0 +1,19 @@
+{
+  "name": "enkisa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal link kısaltıcı (Cloudflare Workers + D1)",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "db:migrate:local": "wrangler d1 migrations apply enkisa --local",
+    "db:migrate": "wrangler d1 migrations apply enkisa --remote",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "qrcode-generator": "^2.0.4"
+  },
+  "devDependencies": {
+    "wrangler": "^4.156.0"
+  }
+}
