@@ -248,10 +248,10 @@ function json(data, status = 200) {
 
 function notFound() {
   const html = `<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bulunamadı · enkısa</title><link rel="icon" type="image/png" href="/favicon.png">
+<title>Bulunamadı · enkısa</title><link rel="icon" type="image/png" sizes="64x64" href="/favicon.png"><link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cascadia+Code:wght@400;600&display=swap">
 <link rel="stylesheet" href="/style.css"></head>
-<body><main class="notfound"><div><a class="brand small" href="/"><img src="/logo.png" alt=""><span>enkısa</span></a>
+<body><main class="notfound"><div><a class="brand small" href="/"><span>enkısa</span></a>
 <p>Bu link bulunamadı.</p><a href="/">Yeni link kısalt</a></div></main></body></html>`;
   return new Response(html, { status: 404, headers: { "Content-Type": "text/html; charset=utf-8" } });
 }

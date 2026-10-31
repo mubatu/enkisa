@@ -29,18 +29,8 @@ button:disabled { opacity: 0.5; cursor: default; }
 
 /* ---------- Brand ---------- */
 
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 18px;
-  color: inherit;
-  text-decoration: none;
-}
-.brand img { width: 72px; height: 72px; border-radius: 18px; display: block; }
+.brand { display: inline-block; color: inherit; text-decoration: none; }
 .brand span { font-size: 48px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
-
-.brand.small { gap: 10px; }
-.brand.small img { width: 32px; height: 32px; border-radius: 8px; }
 .brand.small span { font-size: 20px; }
 
 /* ---------- Home ---------- */
@@ -216,8 +206,6 @@ button:disabled { opacity: 0.5; cursor: default; }
 .notfound a { color: var(--text); }
 
 @media (max-width: 480px) {
-  .brand { gap: 14px; }
-  .brand img { width: 54px; height: 54px; border-radius: 14px; }
   .brand span { font-size: 36px; }
   .home .brand { margin-bottom: 32px; }
   .primary { padding: 0 14px; }
