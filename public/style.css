@@ -165,7 +165,7 @@ button:disabled { opacity: 0.5; cursor: default; }
 .btn.danger:hover { border-color: var(--danger); }
 
 .qr { margin-top: 16px; text-align: center; }
-.qr img { display: block; width: 200px; height: 200px; margin: 0 auto 10px; }
+.qr img { display: block; width: 200px; height: 200px; margin: 0 auto; }
 
 /* ---------- Admin ---------- */
 
